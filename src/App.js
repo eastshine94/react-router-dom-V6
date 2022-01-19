@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Web from './pages/Web';
 import WebPost from './pages/WebPost';
+import Todo from './pages/Todo';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="web" element={<Web />}>
           <Route path=":id" element={<WebPost />} />
         </Route>
-
+        <Route path="todo" element={<Todo />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
