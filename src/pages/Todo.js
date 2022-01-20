@@ -1,11 +1,22 @@
-import React from 'react';
-import { Tag, Table, Popconfirm, Button } from 'antd';
+import React, { useState } from 'react';
+import { Tag, Table, Popconfirm, Button, Row, Col, Form, Input } from 'antd';
 
 function Todo() {
-  const products = [
+  const [todoList, setTodoList] = useState([
     { id: 0, title: '출근 하기', success: true },
     { id: 1, title: '퇴근 하기', success: false }
-  ];
+  ]);
+
+  const [form] = Form.useForm();
+
+  const handleSubmit = data => {
+    const { title } = data;
+    setTodoList(prev => [
+      ...prev,
+      { id: todoList.length, title, success: false }
+    ]);
+  };
+
   const onDelete = id => {
     console.log(id);
   };
@@ -40,7 +51,43 @@ function Todo() {
       }
     }
   ];
-  return <Table dataSource={products} columns={columns} />;
+  return (
+    <div>
+      <Form style={{ marginLeft: '15px' }} form={form} onFinish={handleSubmit}>
+        <Form.Item label="할 일">
+          <Row>
+            <Col span={10}>
+              <Form.Item name="title" noStyle>
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item>
+                <Popconfirm
+                  title="변경된 정보를 저장하시겠습니까?"
+                  onConfirm={() => {
+                    form.submit();
+                  }}
+                  okText="확인"
+                  cancelText="취소"
+                >
+                  <Button type="primary" htmlType="submit">
+                    저장
+                  </Button>
+                </Popconfirm>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form.Item>
+      </Form>
+
+      <Table
+        dataSource={todoList}
+        columns={columns}
+        rowKey={record => record.id}
+      />
+    </div>
+  );
 }
 
 export default Todo;
