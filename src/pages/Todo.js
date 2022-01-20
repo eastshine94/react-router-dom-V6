@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Tag,
   Table,
@@ -12,11 +12,15 @@ import {
 } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 
+const initTodoList = [
+  { id: 0, title: '출근 하기', success: true },
+  { id: 1, title: '퇴근 하기', success: false }
+];
+
 function Todo() {
-  const [todoList, setTodoList] = useState([
-    { id: 0, title: '출근 하기', success: true },
-    { id: 1, title: '퇴근 하기', success: false }
-  ]);
+  const [todoList, setTodoList] = useState(
+    JSON.parse(sessionStorage.getItem('todo')) || initTodoList
+  );
 
   const [form] = Form.useForm();
 
@@ -26,6 +30,7 @@ function Todo() {
       ...prev,
       { id: todoList.length, title, success: false }
     ]);
+    form.setFieldsValue({ title: '' });
   };
 
   const handleDelete = id => {
@@ -70,6 +75,16 @@ function Todo() {
       }
     }
   ];
+
+  useEffect(() => {
+    console.log('change : ', JSON.stringify(todoList));
+    if (todoList.length === 0) {
+      sessionStorage.removeItem('todo');
+    } else {
+      sessionStorage.setItem('todo', JSON.stringify(todoList));
+    }
+  }, [todoList]);
+
   return (
     <Layout>
       <Header style={{ background: '#fff' }}>
