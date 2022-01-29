@@ -16,10 +16,11 @@ import {
   setSessionItem,
   removeSessionItem
 } from '../lib/storage';
+import dayjs from 'dayjs';
 
-const initTodoList = [
-  { id: 0, title: '출근 하기', success: true },
-  { id: 1, title: '퇴근 하기', success: false }
+const INIT_TODO_LIST = [
+  { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
+  { id: 1, title: '퇴근 하기', createdAt: '2022-01-01 00:00:01' }
 ];
 
 function renderSuccessType(isSuccess) {
@@ -30,21 +31,23 @@ function renderSuccessType(isSuccess) {
 
 function Todo() {
   const [todoList, setTodoList] = useState(
-    getSessionItem('todo') || initTodoList
+    getSessionItem('todo') || INIT_TODO_LIST
   );
+  const [selectedRowKeys, setSelectedRows] = useState([]);
 
   const [form] = Form.useForm();
 
-  const handleSubmit = data => {
+  //할 일 등록
+  const handleTodoSubmit = data => {
     const { title } = data;
-    setTodoList(prev => [
-      ...prev,
-      { id: todoList.length, title, success: false }
-    ]);
+    const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+    setTodoList(prev => [...prev, { id: todoList.length, title, createdAt }]);
     form.setFieldsValue({ title: '' });
   };
 
-  const handleDelete = id => {
+  // 할 일 삭제
+  const handleTodoDelete = id => {
     setTodoList(prev =>
       prev
         .filter(item => item.id !== id)
@@ -53,6 +56,13 @@ function Todo() {
           return item;
         })
     );
+  };
+
+  // 할 일 완료
+  const handleTodoFinish = id => {
+    const data = {};
+    setSessionItem('todo-finish', data);
+    handleTodoDelete(id);
   };
 
   const columns = [
@@ -65,16 +75,15 @@ function Todo() {
       dataIndex: 'title'
     },
     {
-      title: '달성 여부',
-      dataIndex: 'success',
-      render: renderSuccessType
+      title: '생성일',
+      dataIndex: 'createdAt'
     },
     {
       title: '완료',
       dataIndex: 'id',
       render: id => {
         return (
-          <Popconfirm title="Delete?" onConfirm={() => handleDelete(id)}>
+          <Popconfirm title="Delete?" onConfirm={() => handleTodoFinish(id)}>
             <Button>완료</Button>
           </Popconfirm>
         );
@@ -85,7 +94,7 @@ function Todo() {
       dataIndex: 'id',
       render: id => {
         return (
-          <Popconfirm title="Delete?" onConfirm={() => handleDelete(id)}>
+          <Popconfirm title="Delete?" onConfirm={() => handleTodoDelete(id)}>
             <Button>삭제</Button>
           </Popconfirm>
         );
@@ -110,12 +119,22 @@ function Todo() {
         <Form
           style={{ marginLeft: '15px' }}
           form={form}
-          onFinish={handleSubmit}
+          onFinish={handleTodoSubmit}
         >
           <Form.Item label="할 일">
             <Row>
               <Col span={10}>
-                <Form.Item name="title" noStyle>
+                <Form.Item
+                  name="title"
+                  rules={[
+                    {
+                      required: true,
+                      message: '이름을 입력해주세요!'
+                    }
+                  ]}
+                  validateTrigger={['onSubmit']}
+                  noStyle
+                >
                   <Input />
                 </Form.Item>
               </Col>
@@ -143,6 +162,7 @@ function Todo() {
           dataSource={todoList}
           columns={columns}
           rowKey={record => record.id}
+          rowSelection={{ selectedRowKeys, onChange: setSelectedRows }}
         />
       </Content>
     </Layout>
