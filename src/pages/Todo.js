@@ -11,15 +11,26 @@ import {
   Layout
 } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem
+} from '../lib/storage';
 
 const initTodoList = [
   { id: 0, title: '출근 하기', success: true },
   { id: 1, title: '퇴근 하기', success: false }
 ];
 
+function renderSuccessType(isSuccess) {
+  const tagColors = ['green', 'red'];
+  const label = isSuccess ? '성공' : '실패';
+  return <Tag color={tagColors[isSuccess ? 0 : 1]}>{label}</Tag>;
+}
+
 function Todo() {
   const [todoList, setTodoList] = useState(
-    JSON.parse(sessionStorage.getItem('todo')) || initTodoList
+    getSessionItem('todo') || initTodoList
   );
 
   const [form] = Form.useForm();
@@ -44,11 +55,6 @@ function Todo() {
     );
   };
 
-  const renderSuccessType = isSuccess => {
-    const tagColors = ['green', 'red'];
-    const label = isSuccess ? '성공' : '실패';
-    return <Tag color={tagColors[isSuccess ? 0 : 1]}>{label}</Tag>;
-  };
   const columns = [
     {
       title: 'ID',
@@ -64,12 +70,23 @@ function Todo() {
       render: renderSuccessType
     },
     {
-      title: 'Delete',
+      title: '완료',
       dataIndex: 'id',
       render: id => {
         return (
           <Popconfirm title="Delete?" onConfirm={() => handleDelete(id)}>
-            <Button>Delete</Button>
+            <Button>완료</Button>
+          </Popconfirm>
+        );
+      }
+    },
+    {
+      title: '삭제',
+      dataIndex: 'id',
+      render: id => {
+        return (
+          <Popconfirm title="Delete?" onConfirm={() => handleDelete(id)}>
+            <Button>삭제</Button>
           </Popconfirm>
         );
       }
@@ -77,11 +94,10 @@ function Todo() {
   ];
 
   useEffect(() => {
-    console.log('change : ', JSON.stringify(todoList));
     if (todoList.length === 0) {
-      sessionStorage.removeItem('todo');
+      removeSessionItem('todo');
     } else {
-      sessionStorage.setItem('todo', JSON.stringify(todoList));
+      setSessionItem('todo', todoList);
     }
   }, [todoList]);
 
