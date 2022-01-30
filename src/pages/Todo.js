@@ -34,6 +34,7 @@ function Todo() {
     getSessionItem('todo') || INIT_TODO_LIST
   );
   const [selectedRowKeys, setSelectedRows] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [form] = Form.useForm();
 
@@ -44,6 +45,7 @@ function Todo() {
 
     setTodoList(prev => [...prev, { id: todoList.length, title, createdAt }]);
     form.setFieldsValue({ title: '' });
+    setCurrentPage(1);
   };
 
   // 할 일 삭제
@@ -63,6 +65,11 @@ function Todo() {
     const data = {};
     setSessionItem('todo-finish', data);
     handleTodoDelete(id);
+  };
+
+  const handleTableChange = pagination => {
+    const { current } = pagination;
+    setCurrentPage(current);
   };
 
   const columns = [
@@ -129,7 +136,7 @@ function Todo() {
                   rules={[
                     {
                       required: true,
-                      message: '이름을 입력해주세요!'
+                      message: '할 일을 입력해주세요!'
                     }
                   ]}
                   validateTrigger={['onSubmit']}
@@ -140,18 +147,9 @@ function Todo() {
               </Col>
               <Col span={4}>
                 <Form.Item>
-                  <Popconfirm
-                    title="변경된 정보를 저장하시겠습니까?"
-                    onConfirm={() => {
-                      form.submit();
-                    }}
-                    okText="확인"
-                    cancelText="취소"
-                  >
-                    <Button type="primary" htmlType="submit">
-                      저장
-                    </Button>
-                  </Popconfirm>
+                  <Button type="primary" htmlType="submit">
+                    저장
+                  </Button>
                 </Form.Item>
               </Col>
             </Row>
@@ -163,6 +161,12 @@ function Todo() {
           columns={columns}
           rowKey={record => record.id}
           rowSelection={{ selectedRowKeys, onChange: setSelectedRows }}
+          pagination={{
+            current: currentPage,
+            pageSize: 10,
+            position: ['bottomCenter']
+          }}
+          onChange={handleTableChange}
         />
       </Content>
     </Layout>
