@@ -8,7 +8,8 @@ import {
   Col,
   Form,
   Input,
-  Layout
+  Layout,
+  Select
 } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import {
@@ -88,21 +89,36 @@ function Todo() {
     {
       title: '완료',
       dataIndex: 'id',
+      align: 'center',
       render: id => {
         return (
-          <Popconfirm title="Delete?" onConfirm={() => handleTodoFinish(id)}>
-            <Button>완료</Button>
-          </Popconfirm>
+          <div>
+            <Select defaultValue={1} style={{ marginRight: '5px' }}>
+              <Select.Option key="success" value={1}>
+                성공
+              </Select.Option>
+              <Select.Option key="fail" value={0}>
+                실패
+              </Select.Option>
+            </Select>
+            <Popconfirm title="Delete?" onConfirm={() => handleTodoFinish(id)}>
+              <Button type="primary">완료</Button>
+            </Popconfirm>
+          </div>
         );
       }
     },
     {
       title: '삭제',
       dataIndex: 'id',
+      align: 'center',
       render: id => {
         return (
-          <Popconfirm title="Delete?" onConfirm={() => handleTodoDelete(id)}>
-            <Button>삭제</Button>
+          <Popconfirm
+            title="삭제 하시겠습니까?"
+            onConfirm={() => handleTodoDelete(id)}
+          >
+            <Button danger={true}>삭제</Button>
           </Popconfirm>
         );
       }
@@ -166,6 +182,7 @@ function Todo() {
             pageSize: 10,
             position: ['bottomCenter']
           }}
+          bordered={true}
           onChange={handleTableChange}
         />
       </Content>
