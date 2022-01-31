@@ -20,6 +20,7 @@ export default function Finish({ row, onDelete }) {
 
     setSessionItem('todo-finish', [...prevData, data]);
     onDelete(row.id);
+    form.setFieldsValue({ isSuccess: true });
   };
 
   if (!isFirstRenderRef.current) {

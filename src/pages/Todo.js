@@ -8,7 +8,8 @@ import {
   Col,
   Form,
   Input,
-  Layout
+  Layout,
+  Space
 } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import {
@@ -59,6 +60,25 @@ function Todo() {
           return item;
         })
     );
+  };
+
+  const handleSelectedDeleteBtn = () => {
+    setTodoList(prev =>
+      prev
+        .filter(item => !selectedRowKeys.includes(item.id))
+        .map((item, idx) => {
+          item.id = idx;
+          return item;
+        })
+    );
+    setSelectedRows([]);
+    setCurrentPage(1);
+  };
+
+  const handleAllDeleteBtn = () => {
+    setTodoList([]);
+    setSelectedRows([]);
+    setCurrentPage(1);
   };
 
   const handleTableChange = pagination => {
@@ -121,7 +141,7 @@ function Todo() {
           onFinish={handleTodoSubmit}
         >
           <Form.Item label="할 일">
-            <Row>
+            <Row grid={[8, 8]}>
               <Col span={10}>
                 <Form.Item
                   name="title"
@@ -138,12 +158,33 @@ function Todo() {
                 </Form.Item>
               </Col>
               <Col span={4}>
-                <Form.Item>
+                <Form.Item noStyle>
                   <Button type="primary" htmlType="submit">
                     저장
                   </Button>
                 </Form.Item>
               </Col>
+            </Row>
+            <Row justify="end" style={{ padding: '0px 10px' }}>
+              <Popconfirm
+                title="선택한 할 일들을 삭제 하시겠습니까?"
+                onConfirm={handleSelectedDeleteBtn}
+                disabled={selectedRowKeys.length <= 0}
+              >
+                <Button
+                  type="primary"
+                  style={{ marginRight: '5px' }}
+                  disabled={selectedRowKeys.length <= 0}
+                >
+                  선택 삭제
+                </Button>
+              </Popconfirm>
+              <Popconfirm
+                title="전체 삭제 하시겠습니까?"
+                onConfirm={handleAllDeleteBtn}
+              >
+                <Button type="danger">전체 삭제</Button>
+              </Popconfirm>
             </Row>
           </Form.Item>
         </Form>
