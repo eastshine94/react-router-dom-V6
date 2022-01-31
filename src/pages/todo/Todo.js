@@ -1,39 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Tag,
-  Table,
-  Popconfirm,
-  Button,
-  Row,
-  Col,
-  Form,
-  Input,
-  Layout,
-  Space
-} from 'antd';
-import { Content, Header } from 'antd/lib/layout/layout';
+import { Link } from 'react-router-dom';
+import { Table, Popconfirm, Button, Row, Col, Form, Input, Layout } from 'antd';
+import dayjs from 'dayjs';
 import {
   getSessionItem,
   setSessionItem,
   removeSessionItem
-} from '../lib/storage';
-import dayjs from 'dayjs';
-import Finish from '../components/Table/Finish';
+} from '../../lib/storage';
+import Finish from '../../components/Table/Finish';
+
+const { Content, Header } = Layout;
 
 const INIT_TODO_LIST = [
   { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
   { id: 1, title: '퇴근 하기', createdAt: '2022-01-01 00:00:01' }
 ];
 
-function renderSuccessType(isSuccess) {
-  const tagColors = ['green', 'red'];
-  const label = isSuccess ? '성공' : '실패';
-  return <Tag color={tagColors[isSuccess ? 0 : 1]}>{label}</Tag>;
-}
-
 function Todo() {
   const [todoList, setTodoList] = useState(
-    getSessionItem('todo') || INIT_TODO_LIST
+    getSessionItem('todo') ?? INIT_TODO_LIST
   );
   const [selectedRowKeys, setSelectedRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -132,11 +117,16 @@ function Todo() {
   return (
     <Layout>
       <Header style={{ background: '#fff' }}>
-        <h1>To Do!</h1>
+        <Row align="middle" justify="space-between">
+          <h1>할 일 목록!!</h1>
+          <Button>
+            <Link to="finish">완료 목록</Link>
+          </Button>
+        </Row>
       </Header>
       <Content>
         <Form
-          style={{ marginLeft: '15px' }}
+          style={{ paddingTop: '15px', marginLeft: '15px' }}
           form={form}
           onFinish={handleTodoSubmit}
         >
@@ -165,6 +155,8 @@ function Todo() {
                 </Form.Item>
               </Col>
             </Row>
+          </Form.Item>
+          <Form.Item style={{ marginBottom: '10px' }}>
             <Row justify="end" style={{ padding: '0px 10px' }}>
               <Popconfirm
                 title="선택한 할 일들을 삭제 하시겠습니까?"
