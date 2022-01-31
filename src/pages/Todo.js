@@ -8,8 +8,7 @@ import {
   Col,
   Form,
   Input,
-  Layout,
-  Select
+  Layout
 } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import {
@@ -18,6 +17,7 @@ import {
   removeSessionItem
 } from '../lib/storage';
 import dayjs from 'dayjs';
+import Finish from '../components/Table/Finish';
 
 const INIT_TODO_LIST = [
   { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
@@ -61,13 +61,6 @@ function Todo() {
     );
   };
 
-  // 할 일 완료
-  const handleTodoFinish = id => {
-    const data = {};
-    setSessionItem('todo-finish', data);
-    handleTodoDelete(id);
-  };
-
   const handleTableChange = pagination => {
     const { current } = pagination;
     setCurrentPage(current);
@@ -88,25 +81,8 @@ function Todo() {
     },
     {
       title: '완료',
-      dataIndex: 'id',
       align: 'center',
-      render: id => {
-        return (
-          <div>
-            <Select defaultValue={1} style={{ marginRight: '5px' }}>
-              <Select.Option key="success" value={1}>
-                성공
-              </Select.Option>
-              <Select.Option key="fail" value={0}>
-                실패
-              </Select.Option>
-            </Select>
-            <Popconfirm title="Delete?" onConfirm={() => handleTodoFinish(id)}>
-              <Button type="primary">완료</Button>
-            </Popconfirm>
-          </div>
-        );
-      }
+      render: (_, row) => <Finish row={row} onDelete={handleTodoDelete} />
     },
     {
       title: '삭제',
