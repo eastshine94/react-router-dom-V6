@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Tag, Table, Layout, Row, Button } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
-import { getSessionItem } from '../../../lib/storage';
+import { getSessionItem } from '../../lib/storage';
 
 function renderSuccessType(isSuccess) {
   const tagColors = ['green', 'red'];

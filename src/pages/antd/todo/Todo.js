@@ -7,7 +7,7 @@ import {
   setSessionItem,
   removeSessionItem
 } from '../../../lib/storage';
-import Finish from '../../../components/Table/FinishBtn';
+import FinishBtn from '../../../components/Table/FinishBtn';
 
 const { Content, Header } = Layout;
 
@@ -87,7 +87,7 @@ function Todo() {
     {
       title: '완료',
       align: 'center',
-      render: (_, row) => <Finish row={row} onDelete={handleTodoDelete} />
+      render: (_, row) => <FinishBtn row={row} onDelete={handleTodoDelete} />
     },
     {
       title: '삭제',
@@ -118,7 +118,7 @@ function Todo() {
     <Layout>
       <Header style={{ background: '#fff' }}>
         <Row align="middle" justify="space-between">
-          <h1>할 일 목록!!</h1>
+          <h1 className="text-[20px]">할 일 목록!!</h1>
           <Button>
             <Link to="finish">완료 목록</Link>
           </Button>
