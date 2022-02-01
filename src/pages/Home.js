@@ -9,7 +9,7 @@ function Home() {
         <Link to="/about">About으로</Link>
       </div>
       <div>
-        <Link to="/todo">todo으로</Link>
+        <Link to="/antd/todo">antd todo으로</Link>
       </div>
       <div>
         <Link to="/web">Web으로</Link>

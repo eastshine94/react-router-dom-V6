@@ -3,7 +3,7 @@ import { Popconfirm, Button, Form, Select, Space } from 'antd';
 import { getSessionItem, setSessionItem } from '../../lib/storage';
 import dayjs from 'dayjs';
 
-export default function Finish({ row, onDelete }) {
+export default function FinishBtn({ row, onDelete }) {
   const isFirstRenderRef = useRef(false);
   const [form] = Form.useForm();
   const handleTodoFinish = values => {

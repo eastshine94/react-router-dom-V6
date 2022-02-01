@@ -6,8 +6,8 @@ import {
   getSessionItem,
   setSessionItem,
   removeSessionItem
-} from '../../lib/storage';
-import Finish from '../../components/Table/Finish';
+} from '../../../lib/storage';
+import Finish from '../../../components/Table/FinishBtn';
 
 const { Content, Header } = Layout;
 

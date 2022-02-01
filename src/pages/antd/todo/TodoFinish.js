@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Tag, Table, Layout, Row, Button } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
-import { getSessionItem } from '../../lib/storage';
+import { getSessionItem } from '../../../lib/storage';
 
 function renderSuccessType(isSuccess) {
   const tagColors = ['green', 'red'];
@@ -51,7 +51,7 @@ function TodoFinish() {
         <Row align="middle" justify="space-between">
           <h1>할 일 완료!!</h1>
           <Button>
-            <Link to="/todo">할 일 목록</Link>
+            <Link to="/antd/todo">할 일 목록</Link>
           </Button>
         </Row>
       </Header>
