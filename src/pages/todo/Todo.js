@@ -7,6 +7,7 @@ import {
   setSessionItem,
   removeSessionItem
 } from '../../lib/storage';
+import FinishBtn from '../../components/Table/FinishBtn';
 
 const INIT_TODO_LIST = [
   { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
@@ -41,7 +42,8 @@ function Todo() {
     );
   };
 
-  const handleSelectedDeleteBtn = () => {
+  const handleSelectedDeleteBtn = event => {
+    event.preventDefault();
     setTodoList(prev =>
       prev
         .filter(item => !selectedRowKeys.includes(item.id))
@@ -54,7 +56,8 @@ function Todo() {
     setCurrentPage(1);
   };
 
-  const handleAllDeleteBtn = () => {
+  const handleAllDeleteBtn = event => {
+    event.preventDefault();
     setTodoList([]);
     setSelectedRows([]);
     setCurrentPage(1);
@@ -73,12 +76,91 @@ function Todo() {
     }
   }, [todoList]);
 
+  const columns = [
+    {
+      title: <input type="checkbox" />,
+      align: 'center',
+      render: () => <input type="checkbox" />
+    },
+    {
+      title: 'ID',
+      dataIndex: 'id'
+    },
+    {
+      title: '할 일',
+      dataIndex: 'title'
+    },
+    {
+      title: '생성일',
+      dataIndex: 'createdAt'
+    },
+    {
+      title: '완료',
+      align: 'center',
+      render: (_, row) => <FinishBtn row={row} onDelete={handleTodoDelete} />
+    },
+    {
+      title: '삭제',
+      dataIndex: 'id',
+      align: 'center',
+      render: id => {
+        return (
+          <button
+            className="p-1 text-red-500 border border-solid border-red-600"
+            onClick={() => handleTodoDelete(id)}
+          >
+            삭제
+          </button>
+        );
+      }
+    }
+  ];
+
   return (
     <div>
-      <header className="m-10">
+      <header className="m-10 flex justify-between">
         <h1 className="text-[20px]">할 일 목록!!</h1>
-        <Link to="finish">완료 목록</Link>
+        <Link
+          to="finish"
+          className="block p-2 border border-solid border-gray-400 hover:border-sky-300"
+        >
+          완료 목록
+        </Link>
       </header>
+      <section>
+        <div className="px-4">
+          <table className="w-full border border-solid border-[#000] border-collapse">
+            <thead>
+              <tr>
+                {columns.map((col, idx) => (
+                  <th
+                    className="p-3 border border-solid border-[#000]"
+                    key={idx}
+                  >
+                    {col.title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {todoList.map(todo => (
+                <tr key={todo.id}>
+                  {columns.map((col, idx) => (
+                    <td
+                      className="p-3 border border-solid border-[#000]"
+                      style={{ textAlign: col.align }}
+                      key={idx}
+                    >
+                      {col.render?.(todo[col.dataIndex], todo) ??
+                        todo[col.dataIndex]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }
