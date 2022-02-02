@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-
 import dayjs from 'dayjs';
 import {
   getSessionItem,
@@ -19,15 +18,17 @@ function Todo() {
     getSessionItem('todo') ?? INIT_TODO_LIST
   );
   const [selectedRowKeys, setSelectedRows] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const inputRef = useRef();
 
   //할 일 등록
-  const handleTodoSubmit = data => {
-    const { title } = data;
+  const handleTodoSubmit = event => {
+    event.preventDefault();
+    const title = inputRef.current.value;
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     setTodoList(prev => [...prev, { id: todoList.length, title, createdAt }]);
-    setCurrentPage(1);
+    inputRef.current.value = '';
   };
 
   // 할 일 삭제
@@ -53,19 +54,29 @@ function Todo() {
         })
     );
     setSelectedRows([]);
-    setCurrentPage(1);
   };
 
   const handleAllDeleteBtn = event => {
     event.preventDefault();
     setTodoList([]);
     setSelectedRows([]);
-    setCurrentPage(1);
   };
 
-  const handleTableChange = pagination => {
-    const { current } = pagination;
-    setCurrentPage(current);
+  const handleCheckboxClick = id => {
+    if (selectedRowKeys.includes(id)) {
+      setSelectedRows(prev => prev.filter(val => val !== id));
+    } else {
+      setSelectedRows(prev => [...prev, id].sort((a, b) => a - b));
+    }
+  };
+
+  const handleAllCheckBoxClick = event => {
+    const { checked } = event.target;
+    if (checked) {
+      setSelectedRows(todoList.map(todo => todo.id));
+    } else {
+      setSelectedRows([]);
+    }
   };
 
   useEffect(() => {
@@ -78,9 +89,25 @@ function Todo() {
 
   const columns = [
     {
-      title: <input type="checkbox" />,
+      title: (
+        <input
+          type="checkbox"
+          checked={
+            selectedRowKeys.length > 0 &&
+            selectedRowKeys.length === todoList.length
+          }
+          onChange={handleAllCheckBoxClick}
+        />
+      ),
+      dataIndex: 'id',
       align: 'center',
-      render: () => <input type="checkbox" />
+      render: id => (
+        <input
+          type="checkbox"
+          checked={selectedRowKeys.includes(id)}
+          onChange={() => handleCheckboxClick(id)}
+        />
+      )
     },
     {
       title: 'ID',
@@ -117,8 +144,8 @@ function Todo() {
   ];
 
   return (
-    <div>
-      <header className="m-10 flex justify-between">
+    <div className="p-5">
+      <header className="flex justify-between">
         <h1 className="text-[20px]">할 일 목록!!</h1>
         <Link
           to="finish"
@@ -127,8 +154,34 @@ function Todo() {
           완료 목록
         </Link>
       </header>
+
       <section>
-        <div className="px-4">
+        <div>
+          <form onSubmit={handleTodoSubmit}>
+            할 일 :{' '}
+            <input
+              ref={inputRef}
+              className="w-2/5 h-7 border border-solid border-gray-400"
+            />
+            <button className="py-1 px-3 text-white bg-sky-500">저장</button>
+          </form>
+        </div>
+        <div className="flex justify-end mb-2">
+          <button
+            className="mr-2 py-1 px-3 text-white bg-sky-500"
+            onClick={handleSelectedDeleteBtn}
+          >
+            선택 삭제
+          </button>
+          <button
+            className="py-1 px-3 text-white bg-red-500"
+            onClick={handleAllDeleteBtn}
+          >
+            전체 삭제
+          </button>
+        </div>
+
+        <div>
           <table className="w-full border border-solid border-[#000] border-collapse">
             <thead>
               <tr>

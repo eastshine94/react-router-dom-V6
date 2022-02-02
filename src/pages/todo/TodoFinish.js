@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tag, Table, Layout, Row, Button } from 'antd';
-import { Content, Header } from 'antd/lib/layout/layout';
+import { Tag } from 'antd';
+
 import { getSessionItem } from '../../lib/storage';
 
 function renderSuccessType(isSuccess) {
@@ -12,8 +12,6 @@ function renderSuccessType(isSuccess) {
 
 function TodoFinish() {
   const [todoList, setTodoList] = useState(getSessionItem('todo-finish') ?? []);
-  const [selectedRowKeys, setSelectedRows] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const columns = [
     {
@@ -40,37 +38,53 @@ function TodoFinish() {
     }
   ];
 
-  const handleTableChange = pagination => {
-    const { current } = pagination;
-    setCurrentPage(current);
-  };
-
   return (
-    <Layout>
-      <Header style={{ background: '#fff' }}>
-        <Row align="middle" justify="space-between">
-          <h1>할 일 완료!!</h1>
-          <Button>
-            <Link to="..">할 일 목록</Link>
-          </Button>
-        </Row>
-      </Header>
-      <Content>
-        <Table
-          dataSource={todoList}
-          columns={columns}
-          rowKey={record => record.id}
-          rowSelection={{ selectedRowKeys, onChange: setSelectedRows }}
-          pagination={{
-            current: currentPage,
-            pageSize: 10,
-            position: ['bottomCenter']
-          }}
-          onChange={handleTableChange}
-          bordered={true}
-        />
-      </Content>
-    </Layout>
+    <div className="p-5">
+      <header className="mb-5 flex justify-between">
+        <h1 className="text-[20px]">할 일 완료!!</h1>
+        <Link
+          to=".."
+          className="block p-2 border border-solid border-gray-400 hover:border-sky-300"
+        >
+          할 일 목록
+        </Link>
+      </header>
+
+      <section>
+        <div>
+          <table className="w-full border border-solid border-[#000] border-collapse">
+            <thead>
+              <tr>
+                {columns.map((col, idx) => (
+                  <th
+                    className="p-3 border border-solid border-[#000]"
+                    key={idx}
+                  >
+                    {col.title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {todoList.map(todo => (
+                <tr key={todo.id}>
+                  {columns.map((col, idx) => (
+                    <td
+                      className="p-3 border border-solid border-[#000]"
+                      style={{ textAlign: col.align }}
+                      key={idx}
+                    >
+                      {col.render?.(todo[col.dataIndex], todo) ??
+                        todo[col.dataIndex]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   );
 }
 
