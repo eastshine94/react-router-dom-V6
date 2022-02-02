@@ -32,11 +32,13 @@ function TodoFinish() {
     },
     {
       title: '생성일',
-      dataIndex: 'createdAt'
+      dataIndex: 'createdAt',
+      ellipsis: { showTitle: false }
     },
     {
       title: '완료일',
-      dataIndex: 'finishedAt'
+      dataIndex: 'finishedAt',
+      ellipsis: { showTitle: false }
     }
   ];
 

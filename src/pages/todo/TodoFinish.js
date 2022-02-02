@@ -61,7 +61,7 @@ function TodoFinish() {
 
       <section>
         <div>
-          <table className="w-full border border-solid border-[#000] border-collapse">
+          <table className="w-full border border-solid border-[#000] border-collapse table-fixed">
             <colgroup>
               <col className="w-[5%]" />
               <col className="w-[50%]" />
