@@ -3,7 +3,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 function Web() {
   const navigate = useNavigate();
-  const handleBackClick = e => {
+  const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     navigate(-1);
   };
