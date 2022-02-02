@@ -73,23 +73,29 @@ function Todo() {
 
   const columns = [
     {
+      width: '5%',
       title: 'ID',
       dataIndex: 'id'
     },
     {
+      width: '40%',
       title: '할 일',
       dataIndex: 'title'
     },
     {
+      width: '15%',
       title: '생성일',
-      dataIndex: 'createdAt'
+      dataIndex: 'createdAt',
+      ellipsis: { showTitle: false }
     },
     {
+      width: '25%',
       title: '완료',
       align: 'center',
       render: (_, row) => <FinishBtn row={row} onDelete={handleTodoDelete} />
     },
     {
+      width: '10%',
       title: '삭제',
       dataIndex: 'id',
       align: 'center',
@@ -185,7 +191,6 @@ function Todo() {
             </Row>
           </Form.Item>
         </Form>
-
         <Table
           dataSource={todoList}
           columns={columns}

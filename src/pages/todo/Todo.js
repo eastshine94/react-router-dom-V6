@@ -190,7 +190,15 @@ function Todo() {
         </div>
 
         <div>
-          <table className="w-full border border-solid border-[#000] border-collapse">
+          <table className="w-full table-fixed border border-solid border-[#000] border-collapse">
+            <colgroup>
+              <col className="w-[5%]" />
+              <col className="w-[5%]" />
+              <col className="w-[40%]" />
+              <col className="w-[15%]" />
+              <col className="w-[25%]" />
+              <col className="w-[10%]" />
+            </colgroup>
             <thead>
               <tr>
                 {columns.map((col, idx) => (
@@ -208,7 +216,7 @@ function Todo() {
                 <tr key={todo.id}>
                   {columns.map((col, idx) => (
                     <td
-                      className="p-3 border border-solid border-[#000]"
+                      className="p-3 border border-solid border-[#000] break-words"
                       style={{ textAlign: col.align }}
                       key={idx}
                     >

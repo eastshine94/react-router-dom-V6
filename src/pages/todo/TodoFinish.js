@@ -62,6 +62,13 @@ function TodoFinish() {
       <section>
         <div>
           <table className="w-full border border-solid border-[#000] border-collapse">
+            <colgroup>
+              <col className="w-[5%]" />
+              <col className="w-[50%]" />
+              <col className="w-[9%]" />
+              <col className="w-[18%]" />
+              <col className="w-[18%]" />
+            </colgroup>
             <thead>
               <tr>
                 {columns.map((col, idx) => (
@@ -79,7 +86,7 @@ function TodoFinish() {
                 <tr key={todo.id}>
                   {columns.map((col, idx) => (
                     <td
-                      className="p-3 border border-solid border-[#000]"
+                      className="p-3 border border-solid border-[#000] break-words"
                       style={{ textAlign: col.align }}
                       key={idx}
                     >
