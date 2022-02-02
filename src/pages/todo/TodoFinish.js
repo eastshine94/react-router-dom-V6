@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tag } from 'antd';
-
 import { getSessionItem } from '../../lib/storage';
 
 function renderSuccessType(isSuccess) {
-  const tagColors = ['green', 'red'];
+  const tagColors = [
+    'm-auto w-[40px] border border-green-500  bg-green-100 text-green-700',
+    'm-auto w-[40px] border border-red-500  bg-red-100 text-red-700'
+  ];
   const label = isSuccess ? '성공' : '실패';
-  return <Tag color={tagColors[isSuccess ? 0 : 1]}>{label}</Tag>;
+  return <div className={tagColors[isSuccess ? 0 : 1]}>{label}</div>;
 }
 
 function TodoFinish() {
