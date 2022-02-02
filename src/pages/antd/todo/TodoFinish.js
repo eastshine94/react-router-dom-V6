@@ -49,7 +49,7 @@ function TodoFinish() {
     <Layout>
       <Header style={{ background: '#fff' }}>
         <Row align="middle" justify="space-between">
-          <h1>할 일 완료!!</h1>
+          <h1 className="text-[20px]">할 일 완료!!</h1>
           <div>
             <Button className="mr-2">
               <Link to="/todo/finish">Basic Mode</Link>
