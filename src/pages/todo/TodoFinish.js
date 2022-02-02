@@ -42,12 +42,20 @@ function TodoFinish() {
     <div className="p-5">
       <header className="mb-5 flex justify-between">
         <h1 className="text-[20px]">할 일 완료!!</h1>
-        <Link
-          to=".."
-          className="block p-2 border border-solid border-gray-400 hover:border-sky-300"
-        >
-          할 일 목록
-        </Link>
+        <div>
+          <Link
+            to="/antd/todo/finish"
+            className="mr-2 p-2 border border-solid border-gray-400 hover:border-sky-300"
+          >
+            Antd Mode
+          </Link>
+          <Link
+            to=".."
+            className="p-2 border border-solid border-gray-400 hover:border-sky-300"
+          >
+            할 일 목록
+          </Link>
+        </div>
       </header>
 
       <section>

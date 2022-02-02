@@ -119,9 +119,14 @@ function Todo() {
       <Header style={{ background: '#fff' }}>
         <Row align="middle" justify="space-between">
           <h1 className="text-[20px]">할 일 목록!!</h1>
-          <Button>
-            <Link to="finish">완료 목록</Link>
-          </Button>
+          <div>
+            <Button className="mr-2">
+              <Link to="/todo">Basic Mode</Link>
+            </Button>
+            <Button>
+              <Link to="finish">완료 목록</Link>
+            </Button>
+          </div>
         </Row>
       </Header>
       <Content>

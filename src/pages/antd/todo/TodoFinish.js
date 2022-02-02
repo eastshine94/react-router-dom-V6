@@ -50,9 +50,14 @@ function TodoFinish() {
       <Header style={{ background: '#fff' }}>
         <Row align="middle" justify="space-between">
           <h1>할 일 완료!!</h1>
-          <Button>
-            <Link to="..">할 일 목록</Link>
-          </Button>
+          <div>
+            <Button className="mr-2">
+              <Link to="/todo/finish">Basic Mode</Link>
+            </Button>
+            <Button>
+              <Link to="..">할 일 목록</Link>
+            </Button>
+          </div>
         </Row>
       </Header>
       <Content>
