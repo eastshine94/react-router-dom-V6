@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  MouseEvent,
+  ChangeEvent,
+  ReactNode
+} from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import {
@@ -8,31 +15,44 @@ import {
 } from '../../lib/storage';
 import FinishBtn from '../../components/Table/FinishBtn';
 
-const INIT_TODO_LIST = [
+interface TodoListTypes {
+  id: number;
+  title: string;
+  createdAt: string;
+}
+
+interface ColumnTypes {
+  title: ReactNode;
+  dataIndex: keyof TodoListTypes;
+  align: 'left' | 'center' | 'right';
+  render: (value?: unknown, recode?: TodoListTypes) => ReactNode;
+}
+
+const INIT_TODO_LIST: TodoListTypes[] = [
   { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
   { id: 1, title: '퇴근 하기', createdAt: '2022-01-01 00:00:01' }
 ];
 
 function Todo() {
-  const [todoList, setTodoList] = useState(
+  const [todoList, setTodoList] = useState<TodoListTypes[]>(
     getSessionItem('todo') ?? INIT_TODO_LIST
   );
-  const [selectedRowKeys, setSelectedRows] = useState([]);
+  const [selectedRowKeys, setSelectedRows] = useState<number[]>([]);
 
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   //할 일 등록
-  const handleTodoSubmit = event => {
+  const handleTodoSubmit = (event: MouseEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const title = inputRef.current.value;
+    const title = (inputRef.current as HTMLInputElement).value;
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
     setTodoList(prev => [...prev, { id: todoList.length, title, createdAt }]);
-    inputRef.current.value = '';
+    (inputRef.current as HTMLInputElement).value = '';
   };
 
   // 할 일 삭제
-  const handleTodoDelete = id => {
+  const handleTodoDelete = (id: number) => {
     setTodoList(prev =>
       prev
         .filter(item => item.id !== id)
@@ -43,7 +63,8 @@ function Todo() {
     );
   };
 
-  const handleSelectedDeleteBtn = event => {
+  // 선택 삭제
+  const handleSelectedDeleteBtn = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setTodoList(prev =>
       prev
@@ -56,13 +77,15 @@ function Todo() {
     setSelectedRows([]);
   };
 
-  const handleAllDeleteBtn = event => {
+  // 모두 삭제
+  const handleAllDeleteBtn = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setTodoList([]);
     setSelectedRows([]);
   };
 
-  const handleCheckboxClick = id => {
+  // 선택
+  const handleCheckboxClick = (id: number) => {
     if (selectedRowKeys.includes(id)) {
       setSelectedRows(prev => prev.filter(val => val !== id));
     } else {
@@ -70,7 +93,8 @@ function Todo() {
     }
   };
 
-  const handleAllCheckBoxClick = event => {
+  // 모두 선택
+  const handleAllCheckBoxClick = (event: ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target;
     if (checked) {
       setSelectedRows(todoList.map(todo => todo.id));
@@ -80,6 +104,7 @@ function Todo() {
   };
 
   useEffect(() => {
+    // update session storage
     if (todoList.length === 0) {
       removeSessionItem('todo');
     } else {
@@ -87,7 +112,7 @@ function Todo() {
     }
   }, [todoList]);
 
-  const columns = [
+  const columns: Partial<ColumnTypes>[] = [
     {
       title: (
         <input
@@ -104,8 +129,8 @@ function Todo() {
       render: id => (
         <input
           type="checkbox"
-          checked={selectedRowKeys.includes(id)}
-          onChange={() => handleCheckboxClick(id)}
+          checked={selectedRowKeys.includes(id as number)}
+          onChange={() => handleCheckboxClick(id as number)}
         />
       )
     },
@@ -134,7 +159,7 @@ function Todo() {
         return (
           <button
             className="p-1 text-red-500 border border-solid border-red-600"
-            onClick={() => handleTodoDelete(id)}
+            onClick={() => handleTodoDelete(id as number)}
           >
             삭제
           </button>
@@ -220,8 +245,10 @@ function Todo() {
                       style={{ textAlign: col.align }}
                       key={idx}
                     >
-                      {col.render?.(todo[col.dataIndex], todo) ??
-                        todo[col.dataIndex]}
+                      {col.dataIndex
+                        ? col.render?.(todo[col.dataIndex], todo) ??
+                          todo[col.dataIndex]
+                        : null}
                     </td>
                   ))}
                 </tr>
