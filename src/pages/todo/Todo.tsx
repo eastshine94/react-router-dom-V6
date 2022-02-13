@@ -8,33 +8,24 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import {
-  getSessionItem,
-  setSessionItem,
-  removeSessionItem
-} from '../../lib/storage';
-import FinishBtn from '../../components/Table/FinishBtn';
-
-interface TodoItem {
-  id: number;
-  title: string;
-  createdAt: string;
-}
+import { getSessionItem, setSessionItem, removeSessionItem } from 'lib/storage';
+import FinishBtn from 'components/Table/FinishBtn';
+import { TodosGetPayload, TodosGetPayloadItem } from 'types/todo';
 
 interface ColumnTypes {
   title: ReactNode;
-  dataIndex: keyof TodoItem;
+  dataIndex: keyof TodosGetPayloadItem;
   align: 'left' | 'center' | 'right';
-  render: (value?: unknown, recode?: TodoItem) => ReactNode;
+  render: (value?: unknown, recode?: TodosGetPayloadItem) => ReactNode;
 }
 
-const INIT_TODO_LIST: TodoItem[] = [
+const INIT_TODO_LIST: TodosGetPayloadItem[] = [
   { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
   { id: 1, title: '퇴근 하기', createdAt: '2022-01-01 00:00:01' }
 ];
 
 function Todo() {
-  const [todoList, setTodoList] = useState<TodoItem[]>(
+  const [todoList, setTodoList] = useState<TodosGetPayload>(
     getSessionItem('todo') ?? INIT_TODO_LIST
   );
   const [selectedRowKeys, setSelectedRows] = useState<number[]>([]);
@@ -150,7 +141,10 @@ function Todo() {
       title: '완료',
       align: 'center',
       render: (_, row) => (
-        <FinishBtn row={row as TodoItem} onDelete={handleTodoDelete} />
+        <FinishBtn
+          row={row as TodosGetPayloadItem}
+          onDelete={handleTodoDelete}
+        />
       )
     },
     {

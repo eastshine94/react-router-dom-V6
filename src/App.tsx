@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import About from './pages/About';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
-import Web from './pages/Web';
-import WebPost from './pages/WebPost';
-import AntdTodo from './pages/antd/todo/Todo';
-import AntdTodoFinish from './pages/antd/todo/TodoFinish';
-import Todo from './pages/todo/Todo';
-import TodoFinish from './pages/todo/TodoFinish';
+import About from 'pages/About';
+import Home from 'pages/Home';
+import NotFound from 'pages/NotFound';
+import Web from 'pages/Web';
+import WebPost from 'pages/WebPost';
+import AntdTodo from 'pages/antd/todo/Todo';
+import AntdTodoFinish from 'pages/antd/todo/TodoFinish';
+import Todo from 'pages/todo/Todo';
+import TodoFinish from 'pages/todo/TodoFinish';
 
 function App() {
   return (

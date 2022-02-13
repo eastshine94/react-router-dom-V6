@@ -3,15 +3,8 @@ import { Link } from 'react-router-dom';
 import { Tag, Table, Layout, Row, Button } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import type { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
-import { getSessionItem } from '../../../lib/storage';
-
-interface TodoFinishItem {
-  id: number;
-  title: string;
-  isSuccess: boolean;
-  createdAt: string;
-  finishedAt: string;
-}
+import { getSessionItem } from 'lib/storage';
+import { TodosFinishedGetPaylod, TodosFinishedGetPaylodItem } from 'types/todo';
 
 function renderSuccessType(isSuccess: boolean) {
   const tagColors = ['green', 'red'];
@@ -20,13 +13,13 @@ function renderSuccessType(isSuccess: boolean) {
 }
 
 function TodoFinish() {
-  const [todoList, setTodoList] = useState<TodoFinishItem[]>(
+  const [todoList, setTodoList] = useState<TodosFinishedGetPaylod>(
     getSessionItem('todo-finish') ?? []
   );
   const [selectedRowKeys, setSelectedRows] = useState<Key[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const columns: ColumnsType<TodoFinishItem> = [
+  const columns: ColumnsType<TodosFinishedGetPaylodItem> = [
     {
       title: 'ID',
       dataIndex: 'id'

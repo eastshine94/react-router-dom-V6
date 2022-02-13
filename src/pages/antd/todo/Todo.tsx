@@ -3,18 +3,9 @@ import { Link } from 'react-router-dom';
 import { Table, Popconfirm, Button, Row, Col, Form, Input, Layout } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import dayjs from 'dayjs';
-import {
-  getSessionItem,
-  setSessionItem,
-  removeSessionItem
-} from '../../../lib/storage';
-import FinishBtn from '../../../components/Table/FinishBtn';
-
-interface TodoItem {
-  id: number;
-  title: string;
-  createdAt: string;
-}
+import { getSessionItem, setSessionItem, removeSessionItem } from 'lib/storage';
+import FinishBtn from 'components/Table/FinishBtn';
+import { TodosGetPayload, TodosGetPayloadItem } from 'types/todo';
 
 const { Content, Header } = Layout;
 
@@ -24,7 +15,7 @@ const INIT_TODO_LIST = [
 ];
 
 function Todo() {
-  const [todoList, setTodoList] = useState<TodoItem[]>(
+  const [todoList, setTodoList] = useState<TodosGetPayload>(
     getSessionItem('todo') ?? INIT_TODO_LIST
   );
   const [selectedRowKeys, setSelectedRows] = useState<Key[]>([]);
@@ -33,7 +24,7 @@ function Todo() {
   const [form] = Form.useForm();
 
   //할 일 등록
-  const handleTodoSubmit = (data: TodoItem) => {
+  const handleTodoSubmit = (data: TodosGetPayloadItem) => {
     const { title } = data;
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
@@ -80,7 +71,7 @@ function Todo() {
     }
   };
 
-  const columns: ColumnsType<TodoItem> = [
+  const columns: ColumnsType<TodosGetPayloadItem> = [
     {
       width: '5%',
       title: 'ID',

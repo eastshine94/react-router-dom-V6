@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getSessionItem } from '../../lib/storage';
+import { TodosFinishedGetPaylod, TodosFinishedGetPaylodItem } from 'types/todo';
+import { getSessionItem } from 'lib/storage';
 
-interface TodoFinishItem {
-  id: number;
-  title: string;
-  isSuccess: boolean;
-  createdAt: string;
-  finishedAt: string;
-}
 interface ColumnTypes {
   title: React.ReactNode;
-  dataIndex: keyof TodoFinishItem;
+  dataIndex: keyof TodosFinishedGetPaylodItem;
   align: 'left' | 'center' | 'right';
-  render: (value?: unknown, recode?: TodoFinishItem) => React.ReactNode;
+  render: (
+    value?: unknown,
+    recode?: TodosFinishedGetPaylodItem
+  ) => React.ReactNode;
 }
 
 function renderSuccessType(isSuccess: boolean) {
@@ -26,7 +23,7 @@ function renderSuccessType(isSuccess: boolean) {
 }
 
 function TodoFinish() {
-  const [todoList, setTodoList] = useState<TodoFinishItem[]>(
+  const [todoList, setTodoList] = useState<TodosFinishedGetPaylod>(
     getSessionItem('todo-finish') ?? []
   );
 
