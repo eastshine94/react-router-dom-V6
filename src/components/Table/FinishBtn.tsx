@@ -3,11 +3,27 @@ import { Popconfirm, Button, Form, Select, Space } from 'antd';
 import { getSessionItem, setSessionItem } from '../../lib/storage';
 import dayjs from 'dayjs';
 
-export default function FinishBtn({ row, onDelete }) {
+interface TodoItem {
+  id: number;
+  title: string;
+  createdAt: string;
+}
+interface TodoFinishItem {
+  id: number;
+  title: string;
+  isSuccess: boolean;
+  createdAt: string;
+  finishedAt: string;
+}
+interface FinishBtnProps {
+  row: TodoItem;
+  onDelete: (id: number) => void;
+}
+export default function FinishBtn({ row, onDelete }: FinishBtnProps) {
   const isFirstRenderRef = useRef(false);
   const [form] = Form.useForm();
 
-  const handleTodoFinish = values => {
+  const handleTodoFinish = (values: TodoFinishItem) => {
     const prevData = getSessionItem('todo-finish') ?? [];
     const { isSuccess } = values;
     const finishedAt = dayjs().format('YYYY-MM-DD HH:mm:ss');

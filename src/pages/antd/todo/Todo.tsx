@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { Key, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Popconfirm, Button, Row, Col, Form, Input, Layout } from 'antd';
+import type { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import dayjs from 'dayjs';
 import {
   getSessionItem,
@@ -8,6 +9,12 @@ import {
   removeSessionItem
 } from '../../../lib/storage';
 import FinishBtn from '../../../components/Table/FinishBtn';
+
+interface TodoItem {
+  id: number;
+  title: string;
+  createdAt: string;
+}
 
 const { Content, Header } = Layout;
 
@@ -17,16 +24,16 @@ const INIT_TODO_LIST = [
 ];
 
 function Todo() {
-  const [todoList, setTodoList] = useState(
+  const [todoList, setTodoList] = useState<TodoItem[]>(
     getSessionItem('todo') ?? INIT_TODO_LIST
   );
-  const [selectedRowKeys, setSelectedRows] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRowKeys, setSelectedRows] = useState<Key[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [form] = Form.useForm();
 
   //할 일 등록
-  const handleTodoSubmit = data => {
+  const handleTodoSubmit = (data: TodoItem) => {
     const { title } = data;
     const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
@@ -36,7 +43,7 @@ function Todo() {
   };
 
   // 할 일 삭제
-  const handleTodoDelete = id => {
+  const handleTodoDelete = (id: number) => {
     setTodoList(prev =>
       prev
         .filter(item => item.id !== id)
@@ -66,12 +73,14 @@ function Todo() {
     setCurrentPage(1);
   };
 
-  const handleTableChange = pagination => {
+  const handleTableChange = (pagination: TablePaginationConfig) => {
     const { current } = pagination;
-    setCurrentPage(current);
+    if (current) {
+      setCurrentPage(current);
+    }
   };
 
-  const columns = [
+  const columns: ColumnsType<TodoItem> = [
     {
       width: '5%',
       title: 'ID',
@@ -142,7 +151,7 @@ function Todo() {
           onFinish={handleTodoSubmit}
         >
           <Form.Item label="할 일">
-            <Row grid={[8, 8]}>
+            <Row gutter={[8, 8]}>
               <Col span={10}>
                 <Form.Item
                   name="title"
@@ -186,7 +195,9 @@ function Todo() {
                 title="전체 삭제 하시겠습니까?"
                 onConfirm={handleAllDeleteBtn}
               >
-                <Button type="danger">전체 삭제</Button>
+                <Button type="primary" danger>
+                  전체 삭제
+                </Button>
               </Popconfirm>
             </Row>
           </Form.Item>

@@ -2,7 +2,21 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getSessionItem } from '../../lib/storage';
 
-function renderSuccessType(isSuccess) {
+interface TodoFinishItem {
+  id: number;
+  title: string;
+  isSuccess: boolean;
+  createdAt: string;
+  finishedAt: string;
+}
+interface ColumnTypes {
+  title: React.ReactNode;
+  dataIndex: keyof TodoFinishItem;
+  align: 'left' | 'center' | 'right';
+  render: (value?: unknown, recode?: TodoFinishItem) => React.ReactNode;
+}
+
+function renderSuccessType(isSuccess: boolean) {
   const tagColors = [
     'm-auto w-[40px] border border-green-500  bg-green-100 text-green-700',
     'm-auto w-[40px] border border-red-500  bg-red-100 text-red-700'
@@ -12,9 +26,11 @@ function renderSuccessType(isSuccess) {
 }
 
 function TodoFinish() {
-  const [todoList, setTodoList] = useState(getSessionItem('todo-finish') ?? []);
+  const [todoList, setTodoList] = useState<TodoFinishItem[]>(
+    getSessionItem('todo-finish') ?? []
+  );
 
-  const columns = [
+  const columns: Partial<ColumnTypes>[] = [
     {
       title: 'ID',
       dataIndex: 'id'
@@ -27,7 +43,7 @@ function TodoFinish() {
       title: '달성 여부',
       dataIndex: 'isSuccess',
       align: 'center',
-      render: renderSuccessType
+      render: () => renderSuccessType
     },
     {
       title: '생성일',
@@ -90,8 +106,10 @@ function TodoFinish() {
                       style={{ textAlign: col.align }}
                       key={idx}
                     >
-                      {col.render?.(todo[col.dataIndex], todo) ??
-                        todo[col.dataIndex]}
+                      {col.render?.(
+                        col.dataIndex ? todo[col.dataIndex] : null,
+                        todo
+                      ) ?? (col.dataIndex ? todo[col.dataIndex] : null)}
                     </td>
                   ))}
                 </tr>

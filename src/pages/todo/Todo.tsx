@@ -15,7 +15,7 @@ import {
 } from '../../lib/storage';
 import FinishBtn from '../../components/Table/FinishBtn';
 
-interface TodoListTypes {
+interface TodoItem {
   id: number;
   title: string;
   createdAt: string;
@@ -23,18 +23,18 @@ interface TodoListTypes {
 
 interface ColumnTypes {
   title: ReactNode;
-  dataIndex: keyof TodoListTypes;
+  dataIndex: keyof TodoItem;
   align: 'left' | 'center' | 'right';
-  render: (value?: unknown, recode?: TodoListTypes) => ReactNode;
+  render: (value?: unknown, recode?: TodoItem) => ReactNode;
 }
 
-const INIT_TODO_LIST: TodoListTypes[] = [
+const INIT_TODO_LIST: TodoItem[] = [
   { id: 0, title: '출근 하기', createdAt: '2022-01-01 00:00:01' },
   { id: 1, title: '퇴근 하기', createdAt: '2022-01-01 00:00:01' }
 ];
 
 function Todo() {
-  const [todoList, setTodoList] = useState<TodoListTypes[]>(
+  const [todoList, setTodoList] = useState<TodoItem[]>(
     getSessionItem('todo') ?? INIT_TODO_LIST
   );
   const [selectedRowKeys, setSelectedRows] = useState<number[]>([]);
@@ -149,7 +149,9 @@ function Todo() {
     {
       title: '완료',
       align: 'center',
-      render: (_, row) => <FinishBtn row={row} onDelete={handleTodoDelete} />
+      render: (_, row) => (
+        <FinishBtn row={row as TodoItem} onDelete={handleTodoDelete} />
+      )
     },
     {
       title: '삭제',
@@ -245,10 +247,10 @@ function Todo() {
                       style={{ textAlign: col.align }}
                       key={idx}
                     >
-                      {col.dataIndex
-                        ? col.render?.(todo[col.dataIndex], todo) ??
-                          todo[col.dataIndex]
-                        : null}
+                      {col.render?.(
+                        col.dataIndex ? todo[col.dataIndex] : null,
+                        todo
+                      ) ?? (col.dataIndex ? todo[col.dataIndex] : null)}
                     </td>
                   ))}
                 </tr>
